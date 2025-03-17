@@ -7,22 +7,31 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
 }).addTo(map);
 
+// Fetch weather data for the map center on load
+fetchWeatherForMap(51.505, -0.09);
+
 // Fetch weather data for the map center
 async function fetchWeatherForMap(lat, lon) {
     const apiKey = "YOUR_API_KEY";
     const weatherUrl = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${apiKey}&units=metric`;
 
-    const response = await fetch(weatherUrl);
-    const data = await response.json();
+    try {
+        const response = await fetch(weatherUrl);
+        const data = await response.json();
 
-    if (data.cod === 200) {
-        const temp = data.main.temp;
-        const description = data.weather[0].description;
+        if (data.cod === 200) {
+            const temp = data.main.temp;
+            const description = data.weather[0].description;
 
-        // Add marker and popup to the map
-        L.marker([lat, lon]).addTo(map)
-            .bindPopup(`<b>${description}</b><br>Temperature: ${temp}°C`)
-            .openPopup();
+            // Add marker and popup to the map
+            L.marker([lat, lon]).addTo(map)
+                .bindPopup(`<b>${description}</b><br>Temperature: ${temp}°C`)
+                .openPopup();
+        } else {
+            alert("Unable to fetch weather data. Please try again.");
+        }
+    } catch (error) {
+        alert("Error fetching weather data. Please check your network connection.");
     }
 }
 
