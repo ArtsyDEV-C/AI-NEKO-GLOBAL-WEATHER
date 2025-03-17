@@ -22,6 +22,9 @@ app.use(morgan("dev"));  // Logs requests
 app.use(helmet());  // Security headers
 app.use(passport.initialize());  // Passport middleware
 
+// Serve Leaflet.js library
+app.use('/leaflet', express.static(__dirname + '/node_modules/leaflet/dist'));
+
 // Routes
 app.use("/api/auth", authRoutes);
 app.use("/api/weather", weatherRoutes);
