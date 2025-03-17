@@ -1,0 +1,63 @@
+document.addEventListener('DOMContentLoaded', async function() {
+    const token = localStorage.getItem('token');
+    const userData = await fetchUserData(token);
+
+    document.getElementById("user-name").innerText = userData.name;
+    document.getElementById("user-email").innerText = userData.email;
+
+    // Fetch user preferences (e.g., preferred unit)
+    const userPreferences = await fetchUserPreferences(token);
+    document.getElementById("preferred-unit").innerText = userPreferences.unit;
+    document.getElementById("weather-unit").innerText = userPreferences.unit;
+
+    // Fetch weather data
+    const weatherData = await fetchWeatherData(userData.city, userPreferences.unit);
+    document.getElementById("weather-city").innerText = userData.city;
+    document.getElementById("weather-temp").innerText = weatherData.temperature;
+    document.getElementById("weather-desc").innerText = weatherData.description;
+
+    // Fetch weather alerts
+    const weatherAlerts = await fetchWeatherAlerts(userData.city);
+    const alertsList = document.getElementById("alerts-list");
+    weatherAlerts.forEach(alert => {
+        const listItem = document.createElement("li");
+        listItem.innerText = alert;
+        alertsList.appendChild(listItem);
+    });
+});
+
+// Fetch user data (simulate an API call)
+async function fetchUserData(token) {
+    // In reality, make an API call to your backend
+    return {
+        name: 'John Doe',
+        email: 'john.doe@example.com',
+        city: 'New York'
+    };
+}
+
+// Fetch user preferences (simulate an API call)
+async function fetchUserPreferences(token) {
+    // In reality, make an API call to your backend
+    return {
+        unit: 'C'  // or 'F' for Fahrenheit
+    };
+}
+
+// Fetch weather data (simulate an API call)
+async function fetchWeatherData(city, unit) {
+    // In reality, make an API call to the weather API
+    return {
+        temperature: unit === 'C' ? '22' : '71.6',  // Convert temperature based on unit
+        description: 'Clear Sky'
+    };
+}
+
+// Fetch weather alerts (simulate an API call)
+async function fetchWeatherAlerts(city) {
+    // In reality, make an API call to the weather API
+    return [
+        'Thunderstorm warning',
+        'Flood alert'
+    ];
+}

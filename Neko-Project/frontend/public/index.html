@@ -3,20 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Neko Global Weather</title>
+    <title>Weather App</title>
+    <link rel="stylesheet" href="styles/global.css">
 </head>
 <body>
-    <video id="weather-video" autoplay loop muted>
-        <source src="videos/default.mp4" type="video/mp4">
-    </video>
+    <div id="weather-info">
+        <input type="text" id="city-input" placeholder="Enter city name">
+        <button id="search-btn">Search</button>
 
-    <audio id="background-audio" autoplay loop>
-        <source src="music/default.mp3" type="audio/mp3">
-    </audio>
-
-    <input type="text" id="city-input" placeholder="Enter city name">
-    <button id="search-btn">Search</button>
-
-    <script src="scripts/script.js"></script>
+        <h1 id="weather-temp">Temperature: --</h1>
+        <p id="weather-desc">Description: --</p>
+        <p id="weather-humidity">Humidity: --</p>
+        <p id="weather-wind">Wind Speed: --</p>
+        <img id="weather-icon" alt="Weather Icon">
+    </div>
+    <script src="scripts/weather.js"></script>
 </body>
 </html>

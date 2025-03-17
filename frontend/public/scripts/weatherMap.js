@@ -9,10 +9,7 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 
 // Function to fetch weather data from the backend for a specific lat, lon
 async function fetchWeather(lat, lon) {
-    const weatherAPIKey = 'YOUR_OPENWEATHERMAP_API_KEY'; // Replace with your OpenWeatherMap API key
-    const weatherUrl = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${weatherAPIKey}&units=metric`;
-
-    const response = await fetch(weatherUrl);
+    const response = await fetch(`/api/weather?lat=${lat}&lon=${lon}`);
     const data = await response.json();
 
     if (data.cod === 200) {
@@ -21,7 +18,7 @@ async function fetchWeather(lat, lon) {
 
         // Display weather data on the map
         document.getElementById('city-name').innerText = data.name;
-        document.getElementById('temp').innerText = temp;
+        document.getElementById('temp').innerText = `${temp}°C`;
         document.getElementById('weather-desc').innerText = description;
 
         // Add a marker for the clicked location

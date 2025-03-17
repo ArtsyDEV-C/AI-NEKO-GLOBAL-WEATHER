@@ -1,16 +1,5 @@
 // weather.js - Fetch and display weather data on the frontend
 
-// Import Leaflet.js
-import L from 'leaflet';
-
-// Initialize the map
-const map = L.map('weather-map').setView([51.505, -0.09], 13); // Set default view to London
-
-// Add OpenStreetMap tiles as the base layer
-L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-}).addTo(map);
-
 // Function to send SMS notifications using Twilio API
 async function sendWeatherAlert(message) {
     try {
@@ -31,32 +20,18 @@ async function sendWeatherAlert(message) {
     }
 }
 
+// Function to fetch weather data from the backend
 async function getWeather(city) {
     try {
         const response = await fetch(`/api/weather/current?city=${city}`);
         const data = await response.json();
-
+        
         if (data.temperature) {
-            // Update UI with fetched weather data
             document.getElementById("weather-temp").innerText = `${data.temperature}°C`;
             document.getElementById("weather-desc").innerText = data.description;
             document.getElementById("weather-humidity").innerText = `Humidity: ${data.humidity}%`;
             document.getElementById("weather-wind").innerText = `Wind Speed: ${data.windSpeed} m/s`;
             document.getElementById("weather-icon").src = data.icon;
-
-            // Update map with weather data
-            const lat = data.coord.lat;
-            const lon = data.coord.lon;
-            L.marker([lat, lon]).addTo(map)
-                .bindPopup(`<b>${data.description}</b><br>Temperature: ${data.temperature}°C`)
-                .openPopup();
-            map.setView([lat, lon], 13);
-
-            // Check for severe weather conditions and send alert
-            if (data.alerts && data.alerts.length > 0) {
-                const alertMessage = data.alerts.map(alert => alert.description).join('\n');
-                sendWeatherAlert(alertMessage);
-            }
         } else {
             alert("City not found.");
         }
@@ -65,18 +40,49 @@ async function getWeather(city) {
     }
 }
 
+async function getWeatherForecast(city) {
+    try {
+        const response = await fetch(`/api/weather/forecast?city=${city}`);
+        const data = await response.json();
+
+        if (data.forecast) {
+            updateForecastUI(data.forecast);
+        } else {
+            alert("City not found.");
+        }
+    } catch (error) {
+        console.error("Error fetching weather forecast:", error);
+    }
+}
+
+function updateForecastUI(forecast) {
+    const forecastContainer = document.getElementById("weather-forecast");
+    forecastContainer.innerHTML = ""; // Clear previous forecast
+
+    forecast.forEach(day => {
+        const dayElement = document.createElement("div");
+        dayElement.className = "forecast-day";
+        dayElement.innerHTML = `
+            <p>Date: ${day.date}</p>
+            <p>Temperature: ${day.temperature}°C</p>
+            <p>Description: ${day.description}</p>
+            <p>Humidity: ${day.humidity}%</p>
+            <p>Wind Speed: ${day.windSpeed} m/s</p>
+            <img src="${day.icon}" alt="Weather icon">
+        `;
+        forecastContainer.appendChild(dayElement);
+    });
+}
+
 // Call getWeather function on page load
 window.onload = () => {
     getWeather("New York"); // Default city
+    getWeatherForecast("New York"); // Default city forecast
 };
 
-// Event listener for search input
+// Event listener for search button
 document.getElementById("search-btn").addEventListener("click", () => {
     const city = document.getElementById("city-input").value;
     getWeather(city);
-});
-
-// Update map with weather data when it's clicked
-map.on('click', function (e) {
-    fetchWeatherForMap(e.latlng.lat, e.latlng.lng); // Fetch weather for the clicked location
+    getWeatherForecast(city);
 });

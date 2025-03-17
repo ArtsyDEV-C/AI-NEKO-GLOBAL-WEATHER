@@ -1,5 +1,5 @@
-/* Chatbot Container */
-#chatbot-container {
+/* Alert Container */
+#alert-container {
     background-color: #fff;
     padding: 20px;
     border-radius: 10px;
@@ -8,7 +8,7 @@
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-#chatbot-input {
+#alert-message {
     width: 100%;
     padding: 10px;
     font-size: 16px;
@@ -17,23 +17,23 @@
     border: 1px solid #ccc;
 }
 
-#chatbot-response {
-    font-size: 18px;
-    color: #333;
-    margin-top: 20px;
-}
-
-#send-message-btn {
+#send-alert-btn {
     background-color: #28a745;
     color: white;
     padding: 10px;
+    border: none;
     font-size: 16px;
     cursor: pointer;
-    border: none;
     border-radius: 5px;
-    width: 100%;
 }
 
-#send-message-btn:hover {
+#send-alert-btn:hover {
     background-color: #218838;
+}
+
+/* New CSS rule for alert title */
+#alert-title {
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 10px;
 }
