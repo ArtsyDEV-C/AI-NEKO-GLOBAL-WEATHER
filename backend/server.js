@@ -15,9 +15,16 @@ const app = express();
 
 // Middleware
 app.use(express.json());  // Parses JSON requests
+app.use(express.urlencoded({ extended: true })); // Parses URL-encoded requests
 app.use(cors());  // Handles Cross-Origin Requests
 app.use(morgan("dev"));  // Logs requests
 app.use(helmet());  // Security headers
+
+// Example of a correct middleware function
+app.use((req, res, next) => {
+    console.log('Request URL:', req.originalUrl);
+    next();
+});
 
 // Routes
 app.use("/api/auth", authRoutes);
